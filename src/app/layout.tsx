@@ -1,3 +1,4 @@
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 import Navbar from "@/components/Navbar";
 import { constructMetadata } from "@/lib/utils";
 import { Inter } from "next/font/google";
@@ -7,17 +8,17 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = constructMetadata();
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en" className="light">
-      <body className="min-h-screen font-sans antialiased grainy">
-        <Navbar />
-        {children}
-      </body>
+      <UserProvider>
+        <body className="min-h-screen font-sans antialiased grainy">
+          <Navbar />
+          {children}
+        </body>
+      </UserProvider>
     </html>
   );
-}
+};
+
+export default RootLayout;

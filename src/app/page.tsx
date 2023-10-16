@@ -1,13 +1,12 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import Projects from "../components/Projects";
 
-export default function Home() {
-  const { getUser } = getKindeServerSession();
-  const user = getUser();
-
+const Home = () => {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      biits
-      {user && "logged in"}
+      <h1>biits</h1>
+      <Projects />
     </main>
   );
-}
+};
+
+export default Home;

@@ -1,14 +1,9 @@
+"use client";
 import Link from "next/link";
-import {
-  LoginLink,
-  LogoutLink,
-  RegisterLink,
-  getKindeServerSession,
-} from "@kinde-oss/kinde-auth-nextjs/server";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 const Navbar = () => {
-  const { getUser } = getKindeServerSession();
-  const user = getUser();
+  const { user } = useUser();
 
   return (
     <nav className="sticky h-14 inset-x-0 top-0 z-30 w-full border-b border-gray-200 backdrop-blur-lg transition-all">
@@ -20,12 +15,11 @@ const Navbar = () => {
         <div className="hidden items-center space-x-4 sm:flex">
           {!user ? (
             <>
-              <LoginLink>Login</LoginLink>
-              <RegisterLink>Sign up</RegisterLink>
+              <Link href="/api/auth/login">Login</Link>
             </>
           ) : (
             <>
-              <LogoutLink>Logout</LogoutLink>
+              <Link href="/api/auth/logout">Logout</Link>
             </>
           )}
         </div>
