@@ -15,11 +15,11 @@ const Navbar = () => {
         <div className="hidden items-center space-x-4 sm:flex">
           {!user ? (
             <>
-              <Link href="/api/auth/login">Login</Link>
+              <a href="/login">Login</a>
             </>
           ) : (
             <>
-              <Link href="/api/auth/logout">Logout</Link>
+              <a href="/logout">Logout</a>
             </>
           )}
         </div>

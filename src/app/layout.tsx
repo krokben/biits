@@ -1,4 +1,4 @@
-import { UserProvider } from "@auth0/nextjs-auth0/client";
+import Providers from "@/components/Providers";
 import Navbar from "@/components/Navbar";
 import { constructMetadata } from "@/lib/utils";
 import { Inter } from "next/font/google";
@@ -11,12 +11,12 @@ export const metadata = constructMetadata();
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en" className="light">
-      <UserProvider>
+      <Providers>
         <body className="min-h-screen font-sans antialiased grainy">
           <Navbar />
           {children}
         </body>
-      </UserProvider>
+      </Providers>
     </html>
   );
 };
