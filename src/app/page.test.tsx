@@ -1,6 +1,7 @@
 import { vi, expect, describe, it, afterEach } from "vitest";
 import { mockAuthStates, render, screen, within } from "../test/test-utils";
 import Home from "./page";
+import Dashboard from "@/components/Dashboard";
 
 describe("Home", async () => {
   afterEach(() => {
@@ -21,12 +22,26 @@ describe("Home", async () => {
     expect(within(errorMessage)).toBeDefined();
   });
 
-  it("Should render logged in page", async () => {
+  it("Should render logged in dashboard", async () => {
     render(<Home />);
     const main = await screen.findByRole("main");
 
     expect(
-      within(main).getByRole("heading", { level: 1, name: /biits/i })
+      within(main).getByRole("heading", {
+        level: 1,
+        name: /test_name/i,
+      })
+    ).toBeDefined();
+  });
+
+  it("Should render logged in projects", async () => {
+    render(<Home />);
+    const main = await screen.findByRole("main");
+
+    expect(
+      within(main).getByRole("span", {
+        name: /test_email/i,
+      })
     ).toBeDefined();
   });
 });

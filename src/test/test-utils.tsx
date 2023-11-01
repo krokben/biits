@@ -2,6 +2,7 @@ import { ComponentType, ReactElement } from "react";
 import { UserProvider } from "../__mocks__/@auth0/nextjs-auth0/client";
 import { UserProviderProps } from "@auth0/nextjs-auth0/client";
 import { render, RenderOptions } from "@testing-library/react";
+import TRPCProvider from "@/app/_trpc/TRPCProvider";
 
 export const mockAuthStates = { error: "error", loading: "loading" } as const;
 
@@ -31,8 +32,11 @@ export const customRender = (
 ) => {
   const { authState, ...restOfOptions } = options;
 
-  return render(ui, {
-    wrapper: withUserProvider({ authState }),
+  return render(<TRPCProvider>{ui}</TRPCProvider>, {
+    wrapper: withUserProvider({
+      authState,
+      user: { sub: "TEST_ID", name: "TEST_NAME", email: "TEST_EMAIL" },
+    }),
     ...restOfOptions,
   });
 };

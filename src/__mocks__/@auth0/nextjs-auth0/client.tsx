@@ -3,11 +3,8 @@ import { UserProviderProps, UserContext } from "@auth0/nextjs-auth0/client";
 import { ReactElement, useMemo, useCallback } from "react";
 import { mockAuthStates } from "../../../test/test-utils";
 
-interface ConfigContext {
-  loginUrl?: string;
-}
-
 const customUseUser = vi.fn(() => ({
+  sub: "id",
   email: "something@something.com",
   email_verified: true,
 }));
