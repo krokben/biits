@@ -1,7 +1,5 @@
-// import createFetchMock from "vitest-fetch-mock";
-// import { vi } from "vitest";
+import { vi, afterEach } from "vitest";
 
-// const fetchMocker = createFetchMock(vi);
-
-// // sets globalThis.fetch and globalThis.fetchMock to our mocked version
-// fetchMocker.enableMocks();
+afterEach(() => {
+  vi.resetModules();
+});

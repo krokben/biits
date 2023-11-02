@@ -1,10 +1,26 @@
-import { ComponentType, ReactElement } from "react";
+import { ComponentType, ReactElement, createContext } from "react";
 import { UserProvider } from "../__mocks__/@auth0/nextjs-auth0/client";
 import { UserProviderProps } from "@auth0/nextjs-auth0/client";
 import { render, RenderOptions } from "@testing-library/react";
 import TRPCProvider from "@/app/_trpc/TRPCProvider";
+import { vi } from "vitest";
 
 export const mockAuthStates = { error: "error", loading: "loading" } as const;
+
+vi.mock("@/app/_trpc/client", () => {
+  const trpc = createContext({});
+  return {
+    trpc: {
+      ...trpc,
+      user: {
+        getUser: {
+          useQuery: () => ({ data: { id: "TEST_ID", email: "TEST_EMAIL" } }),
+        },
+      },
+      createClient: () => ({}),
+    },
+  };
+});
 
 const withUserProvider = ({
   user,
