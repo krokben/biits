@@ -32,6 +32,12 @@ export const userRouter = t.router({
         });
       }
 
-      return dbUser;
+      const projects = await db.project.findMany({
+        where: {
+          authorId: user.sub,
+        },
+      });
+
+      return { ...dbUser, projects };
     }),
 });
