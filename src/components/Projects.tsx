@@ -14,6 +14,8 @@ const Projects = ({ user }: { user: UserProfile }) => {
   } = useSortProjects();
   const { data, isLoading, error } = trpc.user.getUser.useQuery({ user });
 
+  console.log(window.location.origin);
+
   const projects = useMemo(
     () => (data?.projects ?? []).sort(sortProjects(by, direction)),
     [data?.projects, by, direction]

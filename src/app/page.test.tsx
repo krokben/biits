@@ -1,4 +1,4 @@
-import { vi, expect, describe, it, afterEach } from "vitest";
+import { expect, describe, it } from "vitest";
 import { mockAuthStates, render, screen, within } from "../test/test-utils";
 import Home from "./page";
 

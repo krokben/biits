@@ -29,6 +29,20 @@ export const sortProjects =
     return 0;
   };
 
+export const replaceParam = ({
+  replaceFunc,
+  pathname,
+  by,
+  direction,
+  options,
+}: {
+  replaceFunc: (path: string, options?: { scroll: boolean }) => void;
+  pathname: string;
+  by: string;
+  direction: string;
+  options?: { scroll: boolean };
+}) => replaceFunc(`${pathname}?by=${by}&dir=${direction}`, options);
+
 interface UseSortProjects {
   by: keyof Project;
   direction: string;
@@ -48,12 +62,13 @@ const useSortProjects = (): UseSortProjects => {
   );
   const direction = useMemo(() => params?.get("dir") ?? "asc", [params]);
 
-  const handleDirectionClick = useCallback(() => {
-    router.replace(
-      `${pathname}?by=${by}&dir=${direction === "asc" ? "desc" : "asc"}`,
-      { scroll: false }
-    );
-  }, [router, pathname, by, direction]);
+  const handleDirectionClick = useCallback(
+    () =>
+      router.replace(
+        `${pathname}?by=${by}&dir=${direction === "asc" ? "desc" : "asc"}`
+      ),
+    [router, pathname, by, direction]
+  );
 
   const handleBySubmit: FormEventHandler<HTMLFormElement> = useCallback(
     (e) => e.preventDefault(),
@@ -61,11 +76,12 @@ const useSortProjects = (): UseSortProjects => {
   );
 
   const handleByChange: ChangeEventHandler<HTMLInputElement> = useCallback(
-    (e) => {
-      router.replace(`${pathname}?by=${e.target.value}&dir=${direction}`, {
-        scroll: false,
-      });
-    },
+    (e) =>
+      router.replace(
+        `${pathname}?by=${e.target.value}&dir=${
+          direction === "asc" ? "desc" : "asc"
+        }`
+      ),
     [router, pathname, direction]
   );
 
