@@ -1,7 +1,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
-  ChangeEventHandler,
   FormEventHandler,
+  MouseEventHandler,
   useCallback,
   useMemo,
 } from "react";
@@ -29,26 +29,12 @@ export const sortProjects =
     return 0;
   };
 
-export const replaceParam = ({
-  replaceFunc,
-  pathname,
-  by,
-  direction,
-  options,
-}: {
-  replaceFunc: (path: string, options?: { scroll: boolean }) => void;
-  pathname: string;
-  by: string;
-  direction: string;
-  options?: { scroll: boolean };
-}) => replaceFunc(`${pathname}?by=${by}&dir=${direction}`, options);
-
 interface UseSortProjects {
   by: keyof Project;
   direction: string;
   handleDirectionClick: () => void;
+  handleByClick: MouseEventHandler<HTMLInputElement>;
   handleBySubmit: FormEventHandler<HTMLFormElement>;
-  handleByChange: ChangeEventHandler<HTMLInputElement>;
 }
 
 const useSortProjects = (): UseSortProjects => {
@@ -70,27 +56,25 @@ const useSortProjects = (): UseSortProjects => {
     [router, pathname, by, direction]
   );
 
+  const handleByClick: MouseEventHandler<HTMLInputElement> = useCallback(
+    (e) =>
+      router.replace(
+        `${pathname}?by=${e.currentTarget.value}&dir=${direction}`
+      ),
+    [router, pathname, direction]
+  );
+
   const handleBySubmit: FormEventHandler<HTMLFormElement> = useCallback(
     (e) => e.preventDefault(),
     []
-  );
-
-  const handleByChange: ChangeEventHandler<HTMLInputElement> = useCallback(
-    (e) =>
-      router.replace(
-        `${pathname}?by=${e.target.value}&dir=${
-          direction === "asc" ? "desc" : "asc"
-        }`
-      ),
-    [router, pathname, direction]
   );
 
   return {
     by,
     direction,
     handleDirectionClick,
+    handleByClick,
     handleBySubmit,
-    handleByChange,
   };
 };
 

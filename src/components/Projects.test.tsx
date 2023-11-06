@@ -1,11 +1,5 @@
 import { expect, describe, it } from "vitest";
-import {
-  MOCK_AUTH_USER,
-  fireEvent,
-  render,
-  screen,
-  within,
-} from "../test/test-utils";
+import { MOCK_AUTH_USER, render, screen, within } from "../test/test-utils";
 import Projects from "./Projects";
 
 describe("Projects", async () => {
@@ -21,19 +15,10 @@ describe("Projects", async () => {
   });
 
   it("Should change sort direction", async () => {
-    window.location = {
-      ...window.location,
-      origin: "https://test.com?by=name&dir=asc",
-      href: "href",
-      hash: "hash",
-    };
     const { rerender } = render(<Projects user={MOCK_AUTH_USER} />);
-    const ul = await screen.findByRole("list");
+    let ul = await screen.findByRole("list");
     const directionButtonAsc = await screen.findByRole("button", {
       name: /asc/i,
-    });
-    const idRadioInput: HTMLInputElement = await screen.findByRole("radio", {
-      name: /id/i,
     });
 
     expect(ul.firstChild?.textContent).toBe("TEST_PROJECT_1");
@@ -43,16 +28,43 @@ describe("Projects", async () => {
 
     rerender(<Projects user={MOCK_AUTH_USER} />);
 
-    const ulRerendered = await screen.findByRole("list");
-    expect(ulRerendered.firstChild?.textContent).toBe("TEST_PROJECT_3");
+    ul = await screen.findByRole("list");
+    expect(ul.firstChild?.textContent).toBe("TEST_PROJECT_3");
+  });
 
+  it("Should sort by id", async () => {
+    window.location = {
+      ...window.location,
+      href: "https://test.com?by=id&dir=asc",
+    };
+    render(<Projects user={MOCK_AUTH_USER} />);
+
+    const ul = await screen.findByRole("list");
+    expect(ul.firstChild?.textContent).toBe("TEST_PROJECT_3");
+  });
+
+  it("Should sort by id after change", async () => {
+    const { rerender } = render(<Projects user={MOCK_AUTH_USER} />);
+    const form: HTMLFormElement = await screen.findByRole("form", {
+      name: "project-settings",
+    });
+    const nameRadioInput: HTMLInputElement = within(form).getByRole("radio", {
+      name: /name/i,
+    });
+    const idRadioInput: HTMLInputElement = within(form).getByRole("radio", {
+      name: /id/i,
+    });
+
+    expect(nameRadioInput.checked).toBe(true);
     expect(idRadioInput.checked).toBe(false);
+
     idRadioInput.click();
+    expect(nameRadioInput.checked).toBe(false);
     expect(idRadioInput.checked).toBe(true);
 
     rerender(<Projects user={MOCK_AUTH_USER} />);
 
-    const ulRerenderedAgain = await screen.findByRole("list");
-    expect(ulRerenderedAgain.firstChild?.textContent).toBe("TEST_PROJECT_1");
+    const ul = await screen.findByRole("list");
+    expect(ul.firstChild?.textContent).toBe("TEST_PROJECT_3");
   });
 });

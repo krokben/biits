@@ -5,16 +5,9 @@ import { UserProfile } from "@auth0/nextjs-auth0/client";
 import { useMemo } from "react";
 
 const Projects = ({ user }: { user: UserProfile }) => {
-  const {
-    by,
-    direction,
-    handleDirectionClick,
-    handleBySubmit,
-    handleByChange,
-  } = useSortProjects();
+  const { by, direction, handleDirectionClick, handleBySubmit, handleByClick } =
+    useSortProjects();
   const { data, isLoading, error } = trpc.user.getUser.useQuery({ user });
-
-  console.log(window.location.origin);
 
   const projects = useMemo(
     () => (data?.projects ?? []).sort(sortProjects(by, direction)),
@@ -29,6 +22,7 @@ const Projects = ({ user }: { user: UserProfile }) => {
       <span>{data?.email}</span>
       <h2>Projects</h2>
       <form
+        aria-label="project-settings"
         style={{ display: "flex", flexDirection: "column" }}
         onSubmit={handleBySubmit}
       >
@@ -39,7 +33,8 @@ const Projects = ({ user }: { user: UserProfile }) => {
             name="by"
             type="radio"
             value="name"
-            onChange={handleByChange}
+            defaultChecked={by === "name"}
+            onClick={handleByClick}
           />
           <label htmlFor="name">Name</label>
         </div>
@@ -49,7 +44,8 @@ const Projects = ({ user }: { user: UserProfile }) => {
             name="by"
             type="radio"
             value="id"
-            onChange={handleByChange}
+            defaultChecked={by === "id"}
+            onClick={handleByClick}
           />
           <label htmlFor="id">ID</label>
         </div>
