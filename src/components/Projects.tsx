@@ -3,9 +3,10 @@ import { trpc } from "@/app/_trpc/client";
 import useSortProjects, { sortProjects } from "@/hooks/useSortProjects";
 import { UserProfile } from "@auth0/nextjs-auth0/client";
 import { useMemo } from "react";
+import ProjectSorting from "./ProjectSorting";
 
 const Projects = ({ user }: { user: UserProfile }) => {
-  const { by, direction, handleDirectionClick, handleBySubmit, handleByClick } =
+  const { direction, by, handleDirectionClick, handleByClick } =
     useSortProjects();
   const { data, isLoading, error } = trpc.user.getUser.useQuery({ user });
 
@@ -21,35 +22,12 @@ const Projects = ({ user }: { user: UserProfile }) => {
     <>
       <span>{data?.email}</span>
       <h2>Projects</h2>
-      <form
-        aria-label="project-settings"
-        style={{ display: "flex", flexDirection: "column" }}
-        onSubmit={handleBySubmit}
-      >
-        <button onClick={handleDirectionClick}>{direction}</button>
-        <div>
-          <input
-            id="name"
-            name="by"
-            type="radio"
-            value="name"
-            defaultChecked={by === "name"}
-            onClick={handleByClick}
-          />
-          <label htmlFor="name">Name</label>
-        </div>
-        <div>
-          <input
-            id="id"
-            name="by"
-            type="radio"
-            value="id"
-            defaultChecked={by === "id"}
-            onClick={handleByClick}
-          />
-          <label htmlFor="id">ID</label>
-        </div>
-      </form>
+      <ProjectSorting
+        direction={direction}
+        by={by}
+        handleDirectionClick={handleDirectionClick}
+        handleByClick={handleByClick}
+      />
       <ul>
         {projects.map(({ id, name }) => (
           <li key={id}>{name}</li>

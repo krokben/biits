@@ -1,10 +1,5 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import {
-  FormEventHandler,
-  MouseEventHandler,
-  useCallback,
-  useMemo,
-} from "react";
+import { MouseEventHandler, useCallback, useMemo } from "react";
 import { Project } from "@prisma/client";
 
 export const sortProjects =
@@ -30,11 +25,10 @@ export const sortProjects =
   };
 
 interface UseSortProjects {
+  direction: "asc" | "desc";
   by: keyof Project;
-  direction: string;
   handleDirectionClick: () => void;
   handleByClick: MouseEventHandler<HTMLInputElement>;
-  handleBySubmit: FormEventHandler<HTMLFormElement>;
 }
 
 const useSortProjects = (): UseSortProjects => {
@@ -46,7 +40,10 @@ const useSortProjects = (): UseSortProjects => {
     () => (params?.get("by") ?? "name") as keyof Project,
     [params]
   );
-  const direction = useMemo(() => params?.get("dir") ?? "asc", [params]);
+  const direction = useMemo(
+    () => (params?.get("dir") ?? "asc") as "asc" | "desc",
+    [params]
+  );
 
   const handleDirectionClick = useCallback(
     () =>
@@ -64,17 +61,11 @@ const useSortProjects = (): UseSortProjects => {
     [router, pathname, direction]
   );
 
-  const handleBySubmit: FormEventHandler<HTMLFormElement> = useCallback(
-    (e) => e.preventDefault(),
-    []
-  );
-
   return {
-    by,
     direction,
+    by,
     handleDirectionClick,
     handleByClick,
-    handleBySubmit,
   };
 };
 
