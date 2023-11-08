@@ -11,7 +11,15 @@ const Projects = ({ user }: { user: UserProfile }) => {
   const { data, isLoading, error } = trpc.user.getUser.useQuery({ user });
 
   const projects = useMemo(
-    () => (data?.projects ?? []).sort(sortProjects(by, direction)),
+    () => (
+      <ul>
+        {(data?.projects ?? [])
+          .sort(sortProjects(by, direction))
+          .map(({ id, name }) => (
+            <li key={id}>{name}</li>
+          ))}
+      </ul>
+    ),
     [data?.projects, by, direction]
   );
 
@@ -28,11 +36,7 @@ const Projects = ({ user }: { user: UserProfile }) => {
         handleDirectionClick={handleDirectionClick}
         handleByClick={handleByClick}
       />
-      <ul>
-        {projects.map(({ id, name }) => (
-          <li key={id}>{name}</li>
-        ))}
-      </ul>
+      {projects}
     </>
   );
 };
